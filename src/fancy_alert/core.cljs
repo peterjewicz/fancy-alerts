@@ -15,29 +15,27 @@
   }
 })
 
-; TODO we need to turn this into a map so we can merge in outside styles and then convert to a string
-; Define the core styles of our alert box here
-(defonce styles "
-  position: fixed;
-  width: 200px;
-  height: 200px;
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: center;
-  background: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  border-radius: 8px;
-  top: 50%;
-  left: 50%;
-  margin-top: -100px;
-  margin-left: -100px;")
+(defonce defaultStyles {
+  :position "fixed;"
+  :width "200px;"
+  :height "200px;"
+  :border "1px solid #ddd;"
+  :padding "8px;"
+  :text-align "center;"
+  :background "white;"
+  :display "flex;"
+  :flex-direction "column;"
+  :justify-content "center;"
+  :border-radius "8px;"
+  :top "50%;"
+  :left "50%;"
+  :margin-top "-100px;"
+  :margin-left "-100px;"})
 
-
-(defn generate-alert-css []
+(defn generate-alert-css [mergedStyles]
   "simple helper to add the stles to the domElement"
-  (str "style=\""styles"\""))
+  (str "style=\""(clojure.string/join " "  (map (fn [[key val]] (str (name key) ": " val)) mergedStyles))"\""))
+
 
 (defn handle-close []
   "Handles the deletion of a fancy-box alert"
@@ -48,9 +46,9 @@
   (if (or (:showButton options) (not (:hideAfterN options)))
     (str "<button onClick=\"fancyalerthandleclose()\">"(get-in options [:buttonProperties :buttonText])"</button>")))
 
-(defn generate-html [options]
+(defn generate-html [options mergedStyles]
   "Generates the html give the provided options"
-  (str "<div id=\"fancy-alert\" "(generate-alert-css)">
+  (str "<div id=\"fancy-alert\" "(generate-alert-css mergedStyles)">
           <div class=\"fancy-alert__inner\">
             <p>"(:text options)"</p>"(generate-button-html options)"
           </div>
@@ -63,7 +61,8 @@
 (defn fancy-alert [options]
   "Entry to the fancy-alert component - Call this to show the alert"
   (let [bodyElem (.-body js/document)
-        mergedOptions (merge defaultSettings options)]
-    (.insertAdjacentHTML bodyElem "afterbegin" (generate-html mergedOptions))
+        mergedOptions (merge defaultSettings options)
+        mergedStyles (merge defaultStyles (:styles options))]
+    (.insertAdjacentHTML bodyElem "afterbegin" (generate-html mergedOptions mergedStyles))
       (if (:hideAfterN mergedOptions)
         (set-up-timeout (:timeout mergedOptions)))))
