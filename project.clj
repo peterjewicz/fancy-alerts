@@ -1,5 +1,5 @@
 
-(defproject fancy-alert "0.0.1"
+(defproject fancy_alert "0.0.2"
   :description "A simple alert replacement"
   :source-path "src"
   :url "https://github.com/peterjewicz/fancy-alert"
@@ -14,9 +14,9 @@
   :builds [{
     :id "dev"
     :source-paths ["src"]
-    :compiler {:main fancy-alert.core
+    :compiler {:main fancy_alert.core
       :install-deps true
-      :output-to "public/fancy-alert.js"
+      :output-to "public/fancy_alert.js"
       :output-dir ".cljsbuild"
       :optimizations :none
       :source-map true

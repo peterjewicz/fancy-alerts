@@ -12,8 +12,7 @@
   :showButton false ; show a close button - defaults to true if hideAfterN is false
   :buttonProperties { ; addition button properties
     :buttonText "close" ; close button text
-  }
-})
+  }})
 
 (defonce defaultStyles {
   :position "fixed;"
@@ -35,7 +34,6 @@
 (defn generate-alert-css [mergedStyles]
   "simple helper to add the stles to the domElement"
   (str "style=\""(clojure.string/join " "  (map (fn [[key val]] (str (name key) ": " val)) mergedStyles))"\""))
-
 
 (defn handle-close []
   "Handles the deletion of a fancy-box alert"
